@@ -60,7 +60,6 @@ public class DespesaFaturaController {
 	    // para fazer download do relatório troque 'inline' por 'attachment'
 		headers.add("Content-Disposition", "inline; filename=RelatorioDespesas.pdf");
 		
-		//String dataAtualFormatada = DateUtil.format("ddMMyyyy", new Date());
 		RelatorioResponseDTO relatorio = new RelatorioResponseDTO(Base64.getEncoder().encodeToString(dados),
 						"Relatório de Fatura de Despesas" + ".pdf", String.valueOf(dados.length));
 

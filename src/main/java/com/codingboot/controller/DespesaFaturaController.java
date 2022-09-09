@@ -31,8 +31,8 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
  *
  */
 
-@RestController
-@RequestMapping(value = "/pdf", produces = MediaType.APPLICATION_JSON_VALUE)
+@RestController(value = "DespesaFaturaControllerV1")
+@RequestMapping(value = "/v1/pdf", produces = MediaType.APPLICATION_JSON_VALUE)
 public class DespesaFaturaController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DespesaFaturaController.class);

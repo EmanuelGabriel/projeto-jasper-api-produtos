@@ -1,8 +1,8 @@
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/test
-    username: laravel
-    password: laravel
+    username: teste
+    password: teste
   jpa:
     hibernate:
       ddl-auto: update   
