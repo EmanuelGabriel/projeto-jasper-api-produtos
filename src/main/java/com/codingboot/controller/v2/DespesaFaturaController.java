@@ -11,7 +11,6 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,13 +54,7 @@ public class DespesaFaturaController {
 
 		System.err.println(Arrays.asList(dados));
 
-		HttpHeaders headers = new HttpHeaders();
-		// Define que o arquivo pode ser visualizado no navegador e também nome final do arquivo
-	    // para fazer download do relatório troque 'inline' por 'attachment'
-		headers.add("Content-Disposition", "inline; filename=RelatorioDespesas.pdf");
-		
-		RelatorioResponseDTO relatorio = new RelatorioResponseDTO(Base64.getEncoder().encodeToString(dados),
-						"Relatório de Fatura de Despesas" + ".pdf", String.valueOf(dados.length));
+		RelatorioResponseDTO relatorio = new RelatorioResponseDTO(Base64.getEncoder().encodeToString(dados), "RelatorioFaturaDespesas" + ".pdf", String.valueOf(dados.length));
 
 		return relatorio != null ? ResponseEntity.ok().body(relatorio) : ResponseEntity.notFound().build();
 	}
