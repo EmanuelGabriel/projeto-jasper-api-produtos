@@ -16,13 +16,12 @@ public class Produto implements Serializable {
 	private Integer id;
 	private String nome;
 	private BigDecimal preco;
+	private int quantidade;
 
 	public Produto() {
-		super();
 	}
 
 	public Produto(Integer id, String nome, BigDecimal preco) {
-		super();
 		this.id = id;
 		this.nome = nome;
 		this.preco = preco;
@@ -52,6 +51,14 @@ public class Produto implements Serializable {
 		this.preco = preco;
 	}
 
+	public int getQuantidade() {
+		return quantidade;
+	}
+
+	public void setQuantidade(int quantidade) {
+		this.quantidade = quantidade;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -71,7 +78,7 @@ public class Produto implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Product [id=" + id + ", nome=" + nome + ", preco=" + preco + "]";
+		return "Produto [id=" + id + ", nome=" + nome + ", preco=" + preco + ", quantidade=" + quantidade + "]";
 	}
 
 }
