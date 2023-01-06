@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codingboot.entity.Produto;
+import com.codingboot.exception.ArquivoJasperNaoEncontradoException;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -35,7 +37,7 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 @RequestMapping(value = "/v1/pdf", produces = MediaType.APPLICATION_JSON_VALUE)
 public class DespesaFaturaController {
 
-	private static final Logger LOG = LoggerFactory.getLogger(DespesaFaturaController.class);
+	private static final Logger log = LoggerFactory.getLogger(DespesaFaturaController.class);
 	
 	private static final String PATH_RELATORIO_DESPESAS_JASPER = "/relatorios/jasper/invoice.jasper";
 
@@ -43,7 +45,7 @@ public class DespesaFaturaController {
 	public ResponseEntity<byte[]> downloadDespesas() throws JRException, IOException {
 
 		BigDecimal somaProdutos = somarTotalValorProdutos(buscarProdutos());
-		LOG.info("{}", somaProdutos);
+		log.info("{}", somaProdutos);
 
 		Map<String, Object> parametros = new HashMap<>();
 		parametros.put("tituloRelatorio", "Relatório de Despesas");
@@ -61,17 +63,6 @@ public class DespesaFaturaController {
 		return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF).body(dados);
 	}
 
-	/**
-	 * Lista de Produtos
-	 * @return List<Product>
-	 */
-	private List<Produto> buscarProdutos() {
-		return Arrays.asList(
-				new Produto(10, "Notebook ACER", BigDecimal.valueOf(120)),
-				new Produto(11, "Mouse Microsoft", BigDecimal.valueOf(100)),
-				new Produto(12, "Smartphone Motorola", BigDecimal.valueOf(150)), 
-				new Produto(13, "Geladeira Brastemp", BigDecimal.valueOf(1500)));
-	}
 
 	/**
 	 * A soma total dos preços de todos os produtos
@@ -92,18 +83,44 @@ public class DespesaFaturaController {
 	 * 
 	 * @param relatorio
 	 * @param parametros
-	 * @param registrosRelatorioJasper
-	 * @return
+	 * @param data
+	 * @return {@link Byte}
 	 * @throws JRException
+	 * @author emanuel.sousa
 	 */
-	private byte[] compilarRelatorioViaJasper(String relatorio, Map<String, Object> parametros, List<Produto> relatorioProdutos) throws JRException {
+	private byte[] compilarRelatorioViaJasper(String relatorio, Map<String, Object> parametros, Collection<?> dados) throws JRException {
 		
-		InputStream input = getClass().getResourceAsStream(relatorio);
+		try {
+		
+			InputStream input = getClass().getResourceAsStream(relatorio);
 
-		JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(relatorioProdutos);
-		JasperPrint print = JasperFillManager.fillReport(input, parametros, beanColDataSource);
+			if (input == null) {
+				throw new ArquivoJasperNaoEncontradoException("arquivo jasper não encontrado");
+			}
 
-		return JasperExportManager.exportReportToPdf(print);
+			JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(dados);
+
+			JasperPrint print = JasperFillManager.fillReport(input, parametros, beanColDataSource);
+
+			// Exporta para byte o PDF para fazer o download
+			return JasperExportManager.exportReportToPdf(print);
+
+		} catch (Exception ex) {
+			throw new ArquivoJasperNaoEncontradoException(ex.getMessage());
+		}	
 	}
 
+	
+	/**
+	 * Lista de Produtos
+	 * @return List<Product>
+	 */
+	private List<Produto> buscarProdutos() {
+		return Arrays.asList(
+				new Produto(10, "Notebook ACER", BigDecimal.valueOf(120)),
+				new Produto(11, "Mouse Microsoft", BigDecimal.valueOf(100)),
+				new Produto(12, "Smartphone Motorola", BigDecimal.valueOf(150)), 
+				new Produto(13, "Geladeira Brastemp", BigDecimal.valueOf(1500)),
+				new Produto(14, "Cama Pintos", BigDecimal.valueOf(198.90)));
+	}
 }

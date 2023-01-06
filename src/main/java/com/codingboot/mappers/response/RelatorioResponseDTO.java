@@ -13,11 +13,9 @@ public class RelatorioResponseDTO {
 	private String tamanhoDoArquivo;
 
 	public RelatorioResponseDTO() {
-		super();
 	}
 
 	public RelatorioResponseDTO(String base64, String nomeDoRelatorio, String tamanhoDoArquivo) {
-		super();
 		this.base64 = base64;
 		this.nomeDoRelatorio = nomeDoRelatorio;
 		this.tamanhoDoArquivo = tamanhoDoArquivo;

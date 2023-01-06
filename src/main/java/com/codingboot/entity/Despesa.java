@@ -21,6 +21,7 @@ public class Despesa implements Serializable {
 
 	private Long id;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private LocalDate data;
 
 	private BigDecimal valor;
@@ -30,6 +31,18 @@ public class Despesa implements Serializable {
 	private Categoria categoria;
 
 	private boolean paga = false;
+
+	public Despesa() {
+	}
+
+	public Despesa(Long id, LocalDate data, BigDecimal valor, String descricao, Categoria categoria, boolean paga) {
+		this.id = id;
+		this.data = data;
+		this.valor = valor;
+		this.descricao = descricao;
+		this.categoria = categoria;
+		this.paga = paga;
+	}
 
 	/**
 	 * 
@@ -47,27 +60,12 @@ public class Despesa implements Serializable {
 		this.paga = true;
 	}
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	public LocalDate getDataFormatada() {
 		return data;
 	}
 
 	public String getDescricaCategoria() {
 		return categoria.getDescricao();
-	}
-
-	public Despesa() {
-		super();
-	}
-
-	public Despesa(Long id, LocalDate data, BigDecimal valor, String descricao, Categoria categoria, boolean paga) {
-		super();
-		this.id = id;
-		this.data = data;
-		this.valor = valor;
-		this.descricao = descricao;
-		this.categoria = categoria;
-		this.paga = paga;
 	}
 
 	public Long getId() {
